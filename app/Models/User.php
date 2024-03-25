@@ -20,8 +20,10 @@ class User extends Authenticatable implements JWTSubject
     'surname',
     'email',
     'password',
+    'avatar',
     'state', //1: Active - 2: Inactive
-    'type_user' //1: Client - 2: Admin
+    'type_user', //1: Client - 2: Admin
+    'role_id',
   ];
   /**
    * The attributes that should be hidden for arrays.
@@ -58,5 +60,9 @@ class User extends Authenticatable implements JWTSubject
   public function getJWTCustomClaims()
   {
     return [];
+  }
+
+  public function role() {
+    return $this->belongsTo(Role::class);
   }
 }
