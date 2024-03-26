@@ -21,5 +21,6 @@ Route::group([
 Route::group([
   'middleware' => 'api',
 ], function ($router) {
-  Route::resource('/users', UserController::class); 
+  Route::resource('/users', UserController::class);
+  Route::post('/users/{id}', [UserController::class, 'update']);
 });
