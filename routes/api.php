@@ -23,4 +23,7 @@ Route::group([
 ], function ($router) {
   Route::resource('/users', UserController::class);
   Route::post('/users/{id}', [UserController::class, 'update']);
+
+  Route::resource('/categories', CategoryController::class);
+  Route::post('/categories/{id}', [CategoryController::class, 'update']);
 });
