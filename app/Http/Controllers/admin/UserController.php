@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserGCollection;
 use App\Http\Resources\User\UserGResource;
+use App\Models\Instructor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -33,19 +34,37 @@ class UserController extends Controller
     //
   }
 
-  /**
-   * Store a newly created resource in storage.
-   */
   public function store(Request $request)
   {
     if ($request->hasFile("image")) {
       $path = Storage::putFile("users", $request->file("image"));
-      $request->request->add(["avatar" => $path]);
+      $request->merge(["avatar" => $path]);
     }
-    if ($request->password) {
-      $request->request->add(["password" => bcrypt($request->password)]);
+
+    if ($request->filled('password')) {
+      $request->merge(["password" => bcrypt($request->password)]);
     }
-    $user = User::create($request->all());
+
+    $user = User::create($request->only([
+      'name',
+      'surname',
+      'email',
+      'password',
+      'avatar',
+      'state',
+      'type_user',
+      'role_id',
+    ]));
+
+    if ($request->filled('profession')) {
+      $instructor = Instructor::create([
+        'user_id' => $user->id,
+        'profession' => $request->profession,
+        'description' => $request->input('description', null)
+      ]);
+      return response()->json(["user" => UserGResource::make($user), "instructor" => $instructor]);
+    }
+
     return response()->json(["user" => UserGResource::make($user)]);
   }
 

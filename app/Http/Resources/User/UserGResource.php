@@ -23,6 +23,10 @@ class UserGResource extends JsonResource
           "state" => $this->resource->state ?? 1,
           "created_at" => $this->resource->created_at->format("Y-m-d h:i:s"),
           "avatar" => env("APP_URL") . "/storage/" . $this->resource->avatar,
+          "instructor" => $this->resource->instructor ? [
+            "profession" => $this->resource->instructor->profession,
+            "description" => $this->resource->instructor->description 
+          ] :  NULL 
         ];
     }
 }

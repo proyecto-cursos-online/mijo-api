@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->tinyInteger('state')->default('1');
-            $table->tinyInteger('type_user')->default('1');
+            $table->tinyInteger('state')->default('1'); // Esta activo = 1 / Inactivo = 2
+            $table->tinyInteger('type_user')->default('1'); // Es usuario Admin = 2 / Cliente = 1
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('SET NULL');
             $table->rememberToken();
             $table->timestamps();

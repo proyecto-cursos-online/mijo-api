@@ -66,6 +66,10 @@ class User extends Authenticatable implements JWTSubject
     return $this->belongsTo(Role::class);
   }
 
+  public function instructor() {
+    return $this->hasOne(Instructor::class);
+  }
+
  function scopeFilterAdvance($query, $search, $state) {
     if ($search) {
       $query->where("email", "like", "%".$search."%");
