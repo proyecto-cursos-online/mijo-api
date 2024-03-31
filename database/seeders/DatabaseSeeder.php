@@ -12,11 +12,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+      $role = new Role();
+      $role->name = 'Admin';
+      $role->save();
+  
+      // Crear un usuario y asignarle el rol
+      $user = new User();
+      $user->name = 'Super';
+      $user->surname = 'Admin';
+      $user->email = 'admin@admin.com';
+      $user->password = bcrypt('admin2024');
+      $user->type_user = '2';
+      $user->role()->associate($role); // Asignar el rol al usuario
+      $user->save();
     }
 }
