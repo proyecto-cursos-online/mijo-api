@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\Course\CourseGController as CourseCourseGController;
 use App\Http\Controllers\Admin\Courses\CategoryController;
+use App\Http\Controllers\Admin\Course\CourseGController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -23,7 +25,10 @@ Route::group([
 ], function ($router) {
   Route::resource('/users', UserController::class);
   Route::post('/users/{id}', [UserController::class, 'update']);
-
+  //
   Route::resource('/categories', CategoryController::class);
   Route::post('/categories/{id}', [CategoryController::class, 'update']);
+  //
+  Route::resource('/course', CourseGController::class);
+  Route::post('/course/{id}', [CourseGController::class, 'update']);
 });

@@ -13,7 +13,7 @@ class Course extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['title', 'sub_title', 'slug', 'imagen', 'category_id', 'sub_category_id', 'user_id', 'level', 'idioma', 'vimeo_id', 'time', 'description', 'requirements', 'who_is_it_for', 'state',];
+    protected $fillable = ['title', 'subtitle', 'slug', 'imagen', 'precio_usd','precio_pen', 'category_id', 'sub_category_id', 'user_id', 'level', 'idioma', 'vimeo_id', 'time', 'description', 'requirements', 'who_is_it_for', 'state',];
 
     protected $dates = ['deleted_at'];
 
