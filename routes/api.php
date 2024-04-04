@@ -19,7 +19,6 @@ Route::group([
   Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
   Route::get('/user-profile', [AuthController::class, 'user_profile'])->name('user-profile');    
 });
-
 Route::group([
   'middleware' => 'api',
 ], function ($router) {
@@ -29,6 +28,7 @@ Route::group([
   Route::resource('/categories', CategoryController::class);
   Route::post('/categories/{id}', [CategoryController::class, 'update']);
   //
+  Route::get('/course/config', [CourseGController::class, 'config']);
   Route::resource('/course', CourseGController::class);
   Route::post('/course/{id}', [CourseGController::class, 'update']);
 });
