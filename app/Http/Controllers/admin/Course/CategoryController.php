@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Courses;
+namespace App\Http\Controllers\Admin\Course;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Courses\Category\CategoryCollection;
-use App\Http\Resources\Courses\Category\CategoryResource;
+use App\Http\Resources\Course\Category\CategoryCollection;
+use App\Http\Resources\Course\Category\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

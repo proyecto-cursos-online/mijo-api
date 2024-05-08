@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('instructor_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id');
             $table->string('vimeo_id', 50)->nullable();
@@ -26,9 +26,11 @@ return new class extends Migration
             $table->longText('description');
             $table->longText('requirements');
             $table->longText('participant'); //who is it for
+            $table->float('price_in_dollar')->default(0); //who is it for
+            $table->float('price_in_soles')->default(0); //who is it for
             $table->tinyInteger('state');
-            $table->string('image')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('backgroud_image')->nullable();
+            $table->foreign('instructor_id')->references('id')->on('instructors');
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('sub_category_id')->references('id')->on('categories');
             $table->timestamps();

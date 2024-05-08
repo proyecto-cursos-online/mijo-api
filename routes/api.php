@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\Courses\CategoryController;
+use App\Http\Controllers\Admin\Course\CategoryController;
+use App\Http\Controllers\Admin\Course\CourseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -26,4 +26,8 @@ Route::group([
 
   Route::resource('/categories', CategoryController::class);
   Route::post('/categories/{id}', [CategoryController::class, 'update']);
+
+  Route::get('/courses/config', [CourseController::class, 'config']);
+  Route::resource('/courses', CourseController::class);
+  Route::post('/courses/{id}', [CourseController::class, 'update']);
 });
