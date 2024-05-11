@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Course\Categories;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserGCollection extends ResourceCollection
+class CategoryCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,7 @@ class UserGCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "data"=>UserGResource::collection($this->collection),
+            "data"=>CategoryResource::collection($this->collection),
         ];
     }
 }

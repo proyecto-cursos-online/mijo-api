@@ -7,14 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CourseSection extends Model
+class CourseClaseFiles extends Model
 {
     use HasFactory;
-    use SoftDeletes; 
+    use SoftDeletes;
     protected $fillable = [
-        "name",
-        "course_id",
-        "state"
+        "course_clase_id",
+        "name_file",
+        "size",
+        "time",
+        "resolution",
+        "file",
+        "type"
     ];
     public function setCreatedAtAttribute($value)
     {
@@ -27,11 +31,4 @@ class CourseSection extends Model
         date_default_timezone_set("America/Lima");
         $this->attributes["updated_at"] = Carbon::now();
     }
-
-    public function course(){
-        return $this->belongsTo(Course::class);   
-    } 
-    public function clases(){
-        return $this->hasMany(CourseClase::class, "course_section_id");   
-    } 
 }

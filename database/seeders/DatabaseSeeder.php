@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Role;
-use App\Models\User;
+
+use App\Models\Course\Category;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,18 +14,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-      $role = new Role();
-      $role->name = 'Admin';
-      $role->save();
-  
-      // Crear un usuario y asignarle el rol
-      $user = new User();
-      $user->name = 'Super';
-      $user->surname = 'Admin';
-      $user->email = 'admin@admin.com';
-      $user->password = bcrypt('admin2024');
-      $user->type_user = '2';
-      $user->role()->associate($role); // Asignar el rol al usuario
-      $user->save();
+        // \App\Models\User::factory(10)->create();
+
+        \App\Models\User::factory()->create([
+            'name' => 'Luis Martin',
+            'surname' => 'Vilca Hilasaca',
+            'email' => 'luis@gmail.com',
+            'password' => bcrypt('12345678'),
+            'state' => '1',
+            'type_user' => '2',
+        ]);
+        \App\Models\Role::factory()->create([
+            'name' => 'Administrador',
+        ]);
+        Category::factory()->create([
+            'name' => 'Importación',
+            'state' => '1',
+        ]);
     }
 }

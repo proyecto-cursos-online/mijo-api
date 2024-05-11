@@ -14,19 +14,18 @@ class UserGResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-          "id" => $this->resource->id,
-          "name" => $this->resource->name,
-          "surname" => $this->resource->surname,
-          "email" => $this->resource->email,
-          "role" => $this->resource->role,
-          "state" => $this->resource->state ?? 1,
-          "created_at" => $this->resource->created_at->format("Y-m-d h:i:s"),
-          "avatar" => env("APP_URL") . "/storage/" . $this->resource->avatar,
-          "instructor" => $this->resource->instructor ? [
-            "profession" => $this->resource->instructor->profession,
-            "description" => $this->resource->instructor->description 
-          ] :  NULL 
+        return  [
+            "id" => $this->resource->id,
+            "name" => $this->resource->name,
+            "surname" =>  $this->resource->surname,
+            "email" =>  $this->resource->email,
+            "role" =>  $this->resource->role,
+            "state" =>  $this->resource->state,
+            "is_instructor" =>  $this->resource->is_instructor,
+            "profesion" =>  $this->resource->profesion,
+            "description" =>  $this->resource->description,
+            "created_at" =>  $this->resource->created_at->format("Y-m-d h:i:s"),
+            "avatar" => env("APP_URL") . "storage/" . $this->resource->avatar,
         ];
     }
 }

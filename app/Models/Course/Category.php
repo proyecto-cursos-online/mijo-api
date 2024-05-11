@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models\Course;
 
 use Carbon\Carbon;
@@ -7,13 +8,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CourseSection extends Model
+class Category extends Model
 {
     use HasFactory;
     use SoftDeletes; 
+    // protected $dates = ['deleted_at'];
     protected $fillable = [
         "name",
-        "course_id",
+        "imagen",
+        "category_id",
         "state"
     ];
     public function setCreatedAtAttribute($value)
@@ -28,10 +31,20 @@ class CourseSection extends Model
         $this->attributes["updated_at"] = Carbon::now();
     }
 
-    public function course(){
-        return $this->belongsTo(Course::class);   
-    } 
-    public function clases(){
-        return $this->hasMany(CourseClase::class, "course_section_id");   
-    } 
+    public function children()
+    {
+        return $this->hasMany(Category::class, "category_id");
+    }
+    public function father()
+    {
+        return $this->belongsTo(Category::class, "category_id");
+    }
+    function scopeFilterAdvance($query, $search, $state){
+        if ($search) {
+         $query->where("name", "like", "%".$search."%");
+        }if ($state) {
+         $query->where("state", $state);
+        }
+        return $query;
+     }
 }
