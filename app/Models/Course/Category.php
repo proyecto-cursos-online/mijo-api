@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Category extends Model
 {
     use HasFactory;
-    use SoftDeletes; 
+    use SoftDeletes;
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         "name",
@@ -35,16 +35,19 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, "category_id");
     }
+
     public function father()
     {
         return $this->belongsTo(Category::class, "category_id");
     }
-    function scopeFilterAdvance($query, $search, $state){
+    function scopeFilterAdvance($query, $search, $state)
+    {
         if ($search) {
-         $query->where("name", "like", "%".$search."%");
-        }if ($state) {
-         $query->where("state", $state);
+            $query->where("name", "like", "%" . $search . "%");
+        }
+        if ($state) {
+            $query->where("state", $state);
         }
         return $query;
-     }
+    }
 }

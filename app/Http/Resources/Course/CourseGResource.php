@@ -28,15 +28,15 @@ class CourseGResource extends JsonResource
                 "name" => $this->resource->category->name,
             ],
             "sub_categorie_id" => [
-                "id" => $this->resource->sub_categorie_id->id,
-                "name" => $this->resource->sub_categorie_id->name,
+                "id" => $this->resource->sub_categorie->id,
+                "name" => $this->resource->sub_categorie->name,
             ],
             "sub_categorie" => $this->resource->sub_categorie,
             "user_id" => $this->resource->user_id,
             "user" => [
-                "id" => $this->resource->user->id,
-                "full_name" => $this->resource->user->name . ' ' . $this->resource->user->surname,
-                "email" => $this->resource->user->email,
+                "id" => $this->resource->instructor->id,
+                "full_name" => $this->resource->instructor->name . ' ' . $this->resource->instructor->surname,
+                "email" => $this->resource->instructor->email,
             ],
             "level" => $this->resource->level,
             "idioma" => $this->resource->idioma,
@@ -44,7 +44,7 @@ class CourseGResource extends JsonResource
             "time" => $this->resource->time,
             "description" => $this->resource->description,
             "requirements" => json_decode($this->resource->requirements),
-            "who_is_it_for" => json_decode($this->resource->who_is_it_for),
+            "what_is_it_for" => json_decode($this->resource->what_is_it_for),
             "state" => $this->resource->state
         ];
     }

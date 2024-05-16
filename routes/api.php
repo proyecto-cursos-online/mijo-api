@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\Course\CategoryController;
+use App\Http\Controllers\Admin\Course\ClaseGController;
 use App\Http\Controllers\Admin\Course\CourseGController;
+use App\Http\Controllers\Admin\Course\SeccionGController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -41,8 +43,16 @@ Route::group([
     //api category
     Route::resource('/categories', CategoryController::class);
     Route::post('/category/{id}', [CategoryController::class, "update"]);
-    //api category
+    //api course
     Route::get('/course/config', [CourseGController::class, "config"]);
     Route::resource('/course', CourseGController::class);
+    Route::post('/course/upload_video/{id}', [CourseGController::class, "upload_video"]);
     Route::post('/course/{id}', [CourseGController::class, "update"]);
+    //api sections
+    Route::resource('/course-section', SeccionGController::class);
+    //api sections
+    Route::resource('/course-clases', ClaseGController::class);
+    Route::post('/course-clases-file', [ClaseGController::class, "addFiles"]);
+    Route::post('/course-clases/upload_video/{id}', [ClaseGController::class, "upload_video"]);
+    Route::delete('/course-clases-file/{id}', [ClaseGController::class, "removeFiles"]);
 });

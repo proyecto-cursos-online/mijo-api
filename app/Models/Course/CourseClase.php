@@ -14,6 +14,7 @@ class CourseClase extends Model
     protected $fillable = [
         "course_section_id",
         "name",
+        "description",
         "vimeo_id",
         "time",
         "state"
@@ -34,6 +35,6 @@ class CourseClase extends Model
         return $this->hasMany(CourseSection::class);   
     } 
     public function files(){
-        return $this->hasMany(CourseClaseFiles::class, "course_clase_id");   
+        return $this->hasMany(CourseClaseFile::class, "course_clase_id");   
     } 
 }

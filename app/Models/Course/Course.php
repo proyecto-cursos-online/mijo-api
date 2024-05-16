@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Course extends Model
 {
     use HasFactory;
-    use SoftDeletes; 
+    use SoftDeletes;
     protected $fillable = [
         "title",
         "subtitle",
@@ -28,12 +28,12 @@ class Course extends Model
         "time",
         "description",
         "requirements",
-        "who_is_it_for",
+        "what_is_it_for",
         "state"
     ];
 
     //protected $dates = ['deleted_at'];
-    
+
     public function setCreatedAtAttribute($value)
     {
         date_default_timezone_set("America/Lima");
@@ -46,17 +46,31 @@ class Course extends Model
         $this->attributes["updated_at"] = Carbon::now();
     }
 
-    public function instructor(){
-        return $this->belongsTo(User::class, 'user_id');   
-    } 
-    public function categorie(){
-        return $this->belongsTo(Category::class);   
-    } 
-    public function subcategorie(){
-        return $this->belongsTo(Category::class);   
-    } 
+    public function instructor()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    public function sub_categorie()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
-    public function sections(){
-        return $this->hasMany(CourseSection::class);   
-    } 
+    public function sections()
+    {
+        return $this->hasMany(CourseSection::class);
+    }
+    function scopeFilterAdvance($query, $search, $state)
+    {
+        if ($search) {
+            $query->where("title", "like", "%" . $search . "%");
+        }
+        if ($state) {
+            $query->where("state", $state);
+        }
+        return $query;
+    }
 }
