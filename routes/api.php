@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\Course\CategoryController;
-use App\Http\Controllers\Admin\Course\ClaseGController;
-use App\Http\Controllers\Admin\Course\CourseGController;
-use App\Http\Controllers\Admin\Course\SeccionGController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\Coupon\CouponController;
+use App\Http\Controllers\Admin\Course\ClaseGController;
+use App\Http\Controllers\Admin\Course\CourseGController;
+use App\Http\Controllers\Admin\Course\CategoryController;
+use App\Http\Controllers\Admin\Course\SeccionGController;
+use App\Http\Controllers\Admin\Discount\DiscountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,8 +53,13 @@ Route::group([
     //api sections
     Route::resource('/course-section', SeccionGController::class);
     //api sections
-    Route::resource('/course-clases', ClaseGController::class);
-    Route::post('/course-clases-file', [ClaseGController::class, "addFiles"]);
-    Route::post('/course-clases/upload_video/{id}', [ClaseGController::class, "upload_video"]);
-    Route::delete('/course-clases-file/{id}', [ClaseGController::class, "removeFiles"]);
+    Route::resource('/course-clases',ClaseGController::class);
+    Route::post('/course-clases-file',[ClaseGController::class, "addFiles"]);
+    Route::delete('/course-clases-file/{id}',[ClaseGController::class, "removeFiles"]);
+    Route::post('/course-clases/upload_video/{id}',[ClaseGController::class, "upload_video"]);
+
+    Route::get('/coupon/config',[CouponController::class, "config"]);
+    Route::resource('/coupon',CouponController::class);
+    
+    Route::resource('/discount',DiscountController::class);
 });
