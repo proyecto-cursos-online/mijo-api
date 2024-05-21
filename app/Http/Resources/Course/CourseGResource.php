@@ -34,7 +34,7 @@ class CourseGResource extends JsonResource
             "sub_categorie" => $this->resource->sub_categorie,
             "user_id" => $this->resource->user_id,
             "user" => [
-                "id" => $this->resource->instructor->id,
+                "id" => $this->resource->instructor->id ? [] :null,
                 "full_name" => $this->resource->instructor->name . ' ' . $this->resource->instructor->surname,
                 "email" => $this->resource->instructor->email,
             ],
