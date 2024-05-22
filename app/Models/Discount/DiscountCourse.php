@@ -31,4 +31,9 @@ class DiscountCourse extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class);
+    }
 }

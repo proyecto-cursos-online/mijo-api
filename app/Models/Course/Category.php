@@ -3,6 +3,7 @@
 
 namespace App\Models\Course;
 
+use App\Models\Discount\DiscountCategorie;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,11 @@ class Category extends Model
     public function courses()
     {
         return $this->hasMany(Course::class);
+    }
+
+    public function discount_categories()
+    {
+        return $this->hasMany(DiscountCategorie::class);
     }
 
     public function father()

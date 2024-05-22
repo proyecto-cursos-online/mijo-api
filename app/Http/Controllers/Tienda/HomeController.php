@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Tienda;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Ecommerce\Course\CourseHomeCollection;
+use App\Http\Resources\Ecommerce\Course\CourseHomeResource;
 use App\Models\Course\Category;
 use App\Models\Course\Course;
+use App\Models\Discount\Discount;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -22,12 +25,38 @@ class HomeController extends Controller
                 [
                     "id" => $categories_course->id,
                     "name" => $categories_course->name,
-                    "name_empty" => str_replace(" ","", $categories_course->name),
+                    "name_empty" => str_replace(" ", "", $categories_course->name),
                     "courses_count" => $categories_course->course_count,
                     "courses" => CourseHomeCollection::make($categories_course->courses),
                 ]
             );
         };
+
+        date_default_timezone_set("America/Lima");
+        $desconut_baner = Discount::where("type_campaing", 3)->where("state", 1)
+            ->where("start_date", "<=", today())
+            ->where("end_date", "<=", today())
+            ->first();
+
+        $discount_banner_course = collect([]);
+        if ($desconut_baner) {
+           foreach ($desconut_baner->courses as $key => $coursedis) {
+             $discount_banner_course->push(CourseHomeResource::make($coursedis->course));
+           }
+        }
+        
+        date_default_timezone_set("America/Lima");
+        $desconut_flash = Discount::where("type_campaing", 2)->where("state", 1)
+            ->where("start_date", "<=", today())
+            ->where("end_date", ">=", today())
+            ->first();
+
+        $desconut_flash_course = collect([]);
+        if ($desconut_flash) {
+           foreach ($desconut_flash->courses as $key => $coursedis) {
+             $desconut_flash_course->push(CourseHomeResource::make($coursedis->course));
+           }
+        }
         return response()->json([
             "categories" => $categories->map(
                 function ($categories) {
@@ -41,6 +70,17 @@ class HomeController extends Controller
             ),
             "courses_home" => CourseHomeCollection::make($courses),
             "group_courses_categories" => $group_courses_categories,
+            "desconut_baner" => $desconut_baner,
+            "discount_banner_course" => $discount_banner_course,
+            "desconut_flash" => $desconut_flash ? [
+                "id" => $desconut_flash->id,
+                "discount" => $desconut_flash->discount,
+                "type_discount" => $desconut_flash->type_discount,
+                "end_date" => Carbon::parse($desconut_flash->end_date)->format("Y-m-d"),
+                "start_date_d" => Carbon::parse($desconut_flash->start_date)->format("Y/m/d"),
+                "end_date_d" => Carbon::parse($desconut_flash->end_date)->format("Y/m/d"),
+            ]:NULL,
+            "desconut_flash_course" => $desconut_flash_course
         ]);
     }
 }

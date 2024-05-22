@@ -2,6 +2,7 @@
 
 namespace App\Models\Course;
 
+use App\Models\Discount\DiscountCourse;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -64,6 +65,42 @@ class Course extends Model
     {
         return $this->hasMany(CourseSection::class);
     }
+
+    public function discount_courses()
+    {
+        return $this->hasMany(DiscountCourse::class);
+    }
+
+    public function getDiscountCAttribute()
+    {
+        date_default_timezone_set("America/Lima");
+        $discount = null;
+        foreach ($this->discount_courses as $key => $discourse) {
+            if ($discourse->discount->type_campaing == 1 && $discourse->discount->state == 1) {
+                if (Carbon::now()->between($discourse->discount->start_date, $discourse->discount->end_date)) {
+                    $discount = $discourse->discount;
+                    break;
+                }
+            }
+        };
+        return $discount;
+    }
+
+    public function getDiscountCTAttribute()
+    {
+        date_default_timezone_set("America/Lima");
+        $discount = null;
+        foreach ($this->category->discount_categories as $key => $discategory) {
+            if ($discategory->discount->type_campaing == 1 && $discategory->discount->state == 1) {
+                if (Carbon::now()->between($discategory->discount->start_date, $discategory->discount->end_date)) {
+                    $discount = $discategory->discount;
+                    break;
+                }
+            }
+        };
+        return $discount;
+    }
+
     function AddTimes($horas)
     {
         $total = 0;
