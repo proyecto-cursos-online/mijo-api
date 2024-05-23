@@ -77,7 +77,7 @@ class Course extends Model
         $discount = null;
         foreach ($this->discount_courses as $key => $discourse) {
             if ($discourse->discount->type_campaing == 1 && $discourse->discount->state == 1) {
-                if (Carbon::now()->between($discourse->discount->start_date, $discourse->discount->end_date)) {
+                if (Carbon::now()->between($discourse->discount->start_date, Carbon::parse($discourse->discount->end_date)->addDays(1))) {
                     $discount = $discourse->discount;
                     break;
                 }
@@ -92,13 +92,26 @@ class Course extends Model
         $discount = null;
         foreach ($this->category->discount_categories as $key => $discategory) {
             if ($discategory->discount->type_campaing == 1 && $discategory->discount->state == 1) {
-                if (Carbon::now()->between($discategory->discount->start_date, $discategory->discount->end_date)) {
+                if (Carbon::now()->between($discategory->discount->start_date, Carbon::parse($discategory->discount->end_date)->addDays(1))) {
                     $discount = $discategory->discount;
                     break;
                 }
             }
         };
         return $discount;
+    }
+
+    public function getFilesCountAttribute()
+    {
+        $files_count = 0;
+
+        foreach ($this->sections as $keyS => $section) {
+            foreach ($section->clases as $keyC => $clase) {
+                $files_count += $clase->files->count();
+            }
+        }
+
+        return $files_count;
     }
 
     function AddTimes($horas)

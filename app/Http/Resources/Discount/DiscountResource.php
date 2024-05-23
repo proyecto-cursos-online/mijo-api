@@ -35,9 +35,9 @@ class DiscountResource extends JsonResource
             }),
             "categories" => $this->resource->categories->map(function($categorie_axu) {
                 return [
-                    "id" => $categorie_axu->categorie->id,
-                    "name" => $categorie_axu->categorie->name,
-                    "imagen" => env("APP_URL")."storage/".$categorie_axu->categorie->imagen,
+                    "id" => $categorie_axu->category?->id,
+                    "name" => $categorie_axu->category?->name,
+                    "imagen" => env("APP_URL")."storage/".$categorie_axu->category?->imagen,
                     "axu_id" => $categorie_axu->id,
                 ];
             }),

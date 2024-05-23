@@ -16,7 +16,7 @@ class CourseHomeResource extends JsonResource
     {
         $discount_g = null;
         if ($this->resource->discount_c && $this->resource->discount_c_t) {
-            $discount_g = $this->resource->discount_c_T;
+            $discount_g = $this->resource->discount_c_t;
         } else {
             if ($this->resource->discount_c && !$this->resource->discount_c_t) {
                 $discount_g = $this->resource->discount_c;
@@ -29,6 +29,7 @@ class CourseHomeResource extends JsonResource
         return [
             "id" => $this->resource->id,
             "title" => $this->resource->title,
+            "slug" => $this->resource->slug,
             "subtitle" => $this->resource->subtitle,
             "imagen" => env("APP_URL") . "storage/" . $this->resource->imagen,
             "precio_usd" => $this->resource->precio_usd,

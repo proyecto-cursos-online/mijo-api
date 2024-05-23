@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tienda;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Ecommerce\Course\CourseHomeCollection;
 use App\Http\Resources\Ecommerce\Course\CourseHomeResource;
+use App\Http\Resources\Ecommerce\LandingCourse\LandingCourseResource;
 use App\Models\Course\Category;
 use App\Models\Course\Course;
 use App\Models\Discount\Discount;
@@ -35,16 +36,16 @@ class HomeController extends Controller
         date_default_timezone_set("America/Lima");
         $desconut_baner = Discount::where("type_campaing", 3)->where("state", 1)
             ->where("start_date", "<=", today())
-            ->where("end_date", "<=", today())
+            ->where("end_date", ">=", today())
             ->first();
 
         $discount_banner_course = collect([]);
         if ($desconut_baner) {
-           foreach ($desconut_baner->courses as $key => $coursedis) {
-             $discount_banner_course->push(CourseHomeResource::make($coursedis->course));
-           }
+            foreach ($desconut_baner->courses as $key => $coursedis) {
+                $discount_banner_course->push(CourseHomeResource::make($coursedis->course));
+            }
         }
-        
+
         date_default_timezone_set("America/Lima");
         $desconut_flash = Discount::where("type_campaing", 2)->where("state", 1)
             ->where("start_date", "<=", today())
@@ -53,9 +54,10 @@ class HomeController extends Controller
 
         $desconut_flash_course = collect([]);
         if ($desconut_flash) {
-           foreach ($desconut_flash->courses as $key => $coursedis) {
-             $desconut_flash_course->push(CourseHomeResource::make($coursedis->course));
-           }
+            $desconut_flash->end_date = Carbon::parse($desconut_flash->end_date)->addDays(1);
+            foreach ($desconut_flash->courses as $key => $coursedis) {
+                $desconut_flash_course->push(CourseHomeResource::make($coursedis->course));
+            }
         }
         return response()->json([
             "categories" => $categories->map(
@@ -78,9 +80,36 @@ class HomeController extends Controller
                 "type_discount" => $desconut_flash->type_discount,
                 "end_date" => Carbon::parse($desconut_flash->end_date)->format("Y-m-d"),
                 "start_date_d" => Carbon::parse($desconut_flash->start_date)->format("Y/m/d"),
-                "end_date_d" => Carbon::parse($desconut_flash->end_date)->format("Y/m/d"),
-            ]:NULL,
+                "end_date_d" => Carbon::parse($desconut_flash->end_date)->subDays(1)->format("Y/m/d"),
+            ] : NULL,
             "desconut_flash_course" => $desconut_flash_course
+        ]);
+    }
+    public function course_detail(Request $request, $slug)
+    {
+        $campaing_discount = $request->get("campaing_discount");
+        $discount = null;
+        if ($campaing_discount) {
+            $discount = Discount::findOrFail($campaing_discount);
+        }
+
+        $course = Course::where("slug", $slug)->first();
+        if (!$course) {
+            return abort(404);
+        }
+        $courses_related_instructor = Course::where("id","<>",$course->id)->where("user_id", $course->user_id)->inRandomOrder()->take(2)->get();
+
+        $courses_related_categories = Course::where("id","<>",$course->id)->where("category_id", $course->category_id)->inRandomOrder()->take(3)->get();
+
+        return response()->json([
+            "course" => LandingCourseResource::make($course),
+            "courses_related_instructor" => $courses_related_instructor->map(function($course){
+                return CourseHomeResource::make($course);
+            }),
+            "courses_related_categories" => $courses_related_categories->map(function($course){
+                return CourseHomeResource::make($course);
+            }),
+            "DISCOUNT" => $discount,
         ]);
     }
 }

@@ -12,7 +12,7 @@ class DiscountCategorie extends Model
     use HasFactory;
     protected $fillable = [
         "discount_id",
-        "categorie_id",
+        "category_id",
     ];
 
     public function setCreatedAtAttribute($value)
@@ -27,7 +27,7 @@ class DiscountCategorie extends Model
         $this->attributes["updated_at"] = Carbon::now();
     }
     
-    public function categorie()
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }

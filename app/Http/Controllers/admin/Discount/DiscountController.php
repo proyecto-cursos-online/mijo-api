@@ -1,4 +1,4 @@
-f<?php
+<?php
 
 namespace App\Http\Controllers\Admin\Discount;
 
@@ -66,11 +66,11 @@ class DiscountController extends Controller
         if($request->discount_type == 2){//VALIDACIÓN A NIVEL DE CATEGORIA  
             foreach ($request->categorie_selected as $key => $categorie) {
                 $IS_DISCOUNT_START_DATE = Discount::where("type_campaing",$request->type_campaing)->where("discount_type",$request->discount_type)->whereHas("categories",function($q) use($categorie){
-                    return $q->where("categorie_id",$categorie["id"]);
+                    return $q->where("category_id",$categorie["id"]);
                 })->whereBetween("start_date",[$request->start_date,$request->end_date])->first();
 
                 $IS_DISCOUNT_END_DATE = Discount::where("type_campaing",$request->type_campaing)->where("discount_type",$request->discount_type)->whereHas("categories",function($q) use($categorie){
-                    return $q->where("categorie_id",$categorie["id"]);
+                    return $q->where("category_id",$categorie["id"]);
                 })->whereBetween("end_date",[$request->start_date,$request->end_date])->first();
 
                 if($IS_DISCOUNT_START_DATE || $IS_DISCOUNT_END_DATE){
@@ -94,7 +94,7 @@ class DiscountController extends Controller
             foreach ($request->categorie_selected as $key => $categorie) {
                 DiscountCategorie::create([
                     "discount_id" => $discount->id,
-                    "categorie_id" => $categorie["id"],
+                    "category_id" => $categorie["id"],
                 ]);
             }
         }
@@ -154,11 +154,11 @@ class DiscountController extends Controller
         if($request->discount_type == 2){//VALIDACIÓN A NIVEL DE CATEGORIA  
             foreach ($request->categorie_selected as $key => $categorie) {
                 $IS_DISCOUNT_START_DATE = Discount::where("id","<>",$id)->where("type_campaing",$request->type_campaing)->where("discount_type",$request->discount_type)->whereHas("categories",function($q) use($categorie){
-                    return $q->where("categorie_id",$categorie["id"]);
+                    return $q->where("category_id",$categorie["id"]);
                 })->whereBetween("start_date",[$request->start_date,$request->end_date])->first();
 
-                $IS_DISCOUNT_END_DATE = Discount::where("id","<>",$id)->where("type_campaing",$request->type_campaing)->where("discount_type",$request->discount_type)->whereHas("courses",function($q) use($categorie){
-                    return $q->where("categorie_id",$categorie["id"]);
+                $IS_DISCOUNT_END_DATE = Discount::where("id","<>",$id)->where("type_campaing",$request->type_campaing)->where("discount_type",$request->discount_type)->whereHas("categories",function($q) use($categorie){
+                    return $q->where("category_id",$categorie["id"]);
                 })->whereBetween("end_date",[$request->start_date,$request->end_date])->first();
 
                 if($IS_DISCOUNT_START_DATE || $IS_DISCOUNT_END_DATE){
@@ -167,7 +167,7 @@ class DiscountController extends Controller
             }
         }
 
-        // $request->request->add(["code" => uniqid()]);
+        $request->request->add(["code" => uniqid()]);
         $discount = Discount::findOrFail($id);
         $discount->update($request->all());
 
@@ -191,7 +191,7 @@ class DiscountController extends Controller
             foreach ($request->categorie_selected as $key => $categorie) {
                 DiscountCategorie::create([
                     "discount_id" => $discount->id,
-                    "categorie_id" => $categorie["id"],
+                    "category_id" => $categorie["id"],
                 ]);
             }
         }
