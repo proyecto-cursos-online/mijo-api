@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Course\CategoryController;
 use App\Http\Controllers\Admin\Course\SeccionGController;
 use App\Http\Controllers\Admin\Discount\DiscountController;
 use App\Http\Controllers\Tienda\CartController;
+use App\Http\Controllers\Tienda\CheckoutController;
 use App\Http\Controllers\Tienda\HomeController;
 
 /*
@@ -72,5 +73,6 @@ Route::group([
     Route::get("course-detail/{slug}",[HomeController::class,"course_detail"]);
     Route::resource('/cart',CartController::class);
     Route::post('/apply_coupon',[CartController::class, "apply_coupon"]);
+    Route::post('/checkout',[CheckoutController::class,"store"]);
 });
 
