@@ -31,18 +31,21 @@ class CourseHomeResource extends JsonResource
             "title" => $this->resource->title,
             "slug" => $this->resource->slug,
             "subtitle" => $this->resource->subtitle,
-            "imagen" => env("APP_URL") . "storage/" . $this->resource->imagen,
+            "imagen" => env("APP_URL")."storage/".$this->resource->imagen,
             "precio_usd" => $this->resource->precio_usd,
             "precio_pen" => $this->resource->precio_pen,
             "count_class" => $this->resource->count_class,
             "time_course" => $this->resource->time_course,
             "discount_g" => $discount_g,
+            "count_students" => $this->resource->count_students,
+            "avg_reviews" => $this->resource->avg_reviews ? round($this->resource->avg_reviews,2): 0,
+            "count_reviews" => $this->resource->count_reviews,
             "instructor" => $this->resource->instructor ? [
                 "id" => $this->resource->instructor->id,
-                "full_name" => $this->resource->instructor->name . ' ' . $this->resource->instructor->surname,
+                "full_name" => $this->resource->instructor->name. ' '. $this->resource->instructor->surname,
+                "avatar" => env("APP_URL")."storage/".$this->resource->instructor->avatar,
                 "profesion" => $this->resource->instructor->profesion,
-                "avatar" => env("APP_URL") . "storage/" . $this->resource->instructor->avatar,
-            ] : NULL,
+            ] : NULL
         ];
     }
 }

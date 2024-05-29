@@ -4,16 +4,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Tienda\CartController;
+use App\Http\Controllers\Tienda\HomeController;
+use App\Http\Controllers\Tienda\ReviewController;
+use App\Http\Controllers\Tienda\CheckoutController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Course\ClaseGController;
 use App\Http\Controllers\Admin\Course\CourseGController;
-use App\Http\Controllers\Admin\Course\CategoryController;
+use App\Http\Controllers\Tienda\ProfileClientController;
 use App\Http\Controllers\Admin\Course\SeccionGController;
+use App\Http\Controllers\Admin\Course\CategoryController;
 use App\Http\Controllers\Admin\Discount\DiscountController;
-use App\Http\Controllers\Tienda\CartController;
-use App\Http\Controllers\Tienda\CheckoutController;
-use App\Http\Controllers\Tienda\HomeController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -66,13 +67,19 @@ Route::group([
     
     Route::resource('/discount',DiscountController::class);
 });
-Route::group([
-    'prefix' => 'ecommerce'
-], function ($router) {
+Route::group(["prefix" => "ecommerce"],function($router){
     Route::get("home",[HomeController::class,"home"]);
     Route::get("course-detail/{slug}",[HomeController::class,"course_detail"]);
-    Route::resource('/cart',CartController::class);
-    Route::post('/apply_coupon',[CartController::class, "apply_coupon"]);
-    Route::post('/checkout',[CheckoutController::class,"store"]);
+    
+    Route::group([
+        'middleware' => 'api',
+    ], function ($router) {
+        Route::post('/apply_coupon',[CartController::class, "apply_coupon"]);
+        Route::resource('/cart',CartController::class);
+        Route::post('/checkout',[CheckoutController::class,"store"]);
+        Route::post('/profile',[ProfileClientController::class,"profile"]);
+        Route::post('/update_client',[ProfileClientController::class,"update_client"]);
+        Route::resource('/review',ReviewController::class);
+    });
 });
 

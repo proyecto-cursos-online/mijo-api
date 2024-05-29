@@ -11,7 +11,8 @@ class LandingCourseResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray(Request $request): array
     {
@@ -52,11 +53,14 @@ class LandingCourseResource extends JsonResource
             "count_class" => $this->resource->count_class,
             "time_course" => $this->resource->time_course,
             "files_count" => $this->resource->files_count,
+            "count_students" => $this->resource->count_students,
+            "avg_reviews" => $this->resource->avg_reviews ? round($this->resource->avg_reviews,2): 0,
+            "count_reviews" => $this->resource->count_reviews,
             "discount_g" => $discount_g,
             "discount_date" => $discount_g ? Carbon::parse($discount_g->end_date)->format("d/m") : NULL,
             "description" => $this->resource->description,
             "requirements" => json_decode($this->resource->requirements),
-            "what_is_it_for" => json_decode($this->resource->what_is_it_for),
+            "who_is_it_for" => json_decode($this->resource->who_is_it_for),
             "instructor" => $this->resource->instructor ? [
                 "id" => $this->resource->instructor->id,
                 "full_name" => $this->resource->instructor->name. ' '. $this->resource->instructor->surname,
@@ -64,6 +68,9 @@ class LandingCourseResource extends JsonResource
                 "profesion" => $this->resource->instructor->profesion,
                 "courses_count"  => $this->resource->instructor->courses_count,
                 "description" => $this->resource->instructor->description,
+                "avg_reviews" => $this->resource->instructor->avg_reviews,
+                "count_reviews" => $this->resource->instructor->count_reviews,
+                "count_students" => $this->resource->instructor->count_students,
             ] : NULL,
             // MALLA CURRICULAR
             "malla" => $this->resource->sections->map(function($section){
@@ -81,6 +88,16 @@ class LandingCourseResource extends JsonResource
                 ];
             }),
             "updated_at" => $this->resource->updated_at->format("m/Y"),
-        ];
+            "reviews" => $this->resource->reviews->map(function($review){
+                return [
+                    "message" => $review->message,
+                    "rating" => $review->rating,
+                    "user" => [
+                        "full_name" =>  $review->user->name.' '.$review->user->surname,
+                        "avatar" => env("APP_URL")."storage/".$review->user->avatar,
+                    ]
+                ];
+            })
+        ];  
     }
 }

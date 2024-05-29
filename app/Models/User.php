@@ -2,53 +2,44 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Models\Course\Course;
-use Carbon\Carbon;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
         'name',
         "surname",
         'email',
+        'password',
+
         "avatar",
         "role_id",
-        'password',
-        "state", //1 = activo, 2 = inactivo
-        "type_user", //1 = cliente, 2 = admin
+
+        "state",//1 es activo y 2 es desactivo
+        "type_user",// 1 es de tipo cliente y 2 es de tipo admin
+    
         "is_instructor",
         "profesion",
-        "description"
+        "description",
+        "phone",
     ];
-    public function setCreatedAtAttribute($value)
-    {
-        date_default_timezone_set("America/Lima");
-        $this->attributes["created_at"] = Carbon::now();
-    }
 
-    public function setUpdateAtAttribute($value)
-    {
-        date_default_timezone_set("America/Lima");
-        $this->attributes["updated_at"] = Carbon::now();
-    }
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $hidden = [
         'password',
@@ -56,14 +47,14 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * The attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
-     * @var array<string, string>
+     * @var array
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -83,9 +74,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    public function role(){
+
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
+
     public function courses()
     {
         return $this->hasMany(Course::class)->where("state",2);
@@ -95,12 +89,32 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->courses->count();
     }
-    function scopeFilterAdvance($query, $search, $state){
-        if ($search) {
-         $query->where("email", "like", "%".$search."%");
-        }if ($state) {
-         $query->where("state", $state);
+
+    public function getAvgReviewsAttribute()
+    {
+        return $this->courses->avg("avg_reviews");
+    }
+
+    public function getCountReviewsAttribute()
+    {
+        return $this->courses->sum("count_reviews");
+    }
+
+    public function getCountStudentsAttribute()
+    {
+        return $this->courses->sum("count_students");
+    }
+
+
+    function scopeFilterAdvance($query,$search,$state)
+    {
+        if($search){
+            $query->where("email","like","%".$search."%");
         }
+        if($state){
+            $query->where("state",$state);
+        }
+        
         return $query;
-     }
+    }
 }

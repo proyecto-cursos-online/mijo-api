@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Tienda;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Ecommerce\Course\CourseHomeCollection;
-use App\Http\Resources\Ecommerce\Course\CourseHomeResource;
-use App\Http\Resources\Ecommerce\LandingCourse\LandingCourseResource;
-use App\Models\Course\Category;
-use App\Models\Course\Course;
-use App\Models\Discount\Discount;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Course\Course;
+use App\Models\CoursesStudent;
+use App\Models\Course\Category;
+use App\Models\Discount\Discount;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Ecommerce\Course\CourseHomeResource;
+use App\Http\Resources\Ecommerce\Course\CourseHomeCollection;
+use App\Http\Resources\Ecommerce\LandingCourse\LandingCourseResource;
 
 class HomeController extends Controller
 {
@@ -87,17 +89,24 @@ class HomeController extends Controller
             "desconut_flash_course" => $desconut_flash_course
         ]);
     }
-    public function course_detail(Request $request, $slug)
+
+    public function course_detail(Request $request,$slug)
     {
         $campaing_discount = $request->get("campaing_discount");
         $discount = null;
-        if ($campaing_discount) {
+        if($campaing_discount){
             $discount = Discount::findOrFail($campaing_discount);
         }
-
-        $course = Course::where("slug", $slug)->first();
-        if (!$course) {
+        $course = Course::where("slug",$slug)->first();
+        $is_have_course = false;
+        if(!$course){
             return abort(404);
+        }
+        if(Auth::guard("api")->check()){
+            $course_student = CoursesStudent::where("user_id",auth("api")->user()->id)->where("course_id",$course->id)->first();
+            if($course_student){
+                $is_have_course = true;
+            }
         }
         $courses_related_instructor = Course::where("id","<>",$course->id)->where("user_id", $course->user_id)->inRandomOrder()->take(2)->get();
 
@@ -112,6 +121,7 @@ class HomeController extends Controller
                 return CourseHomeResource::make($course);
             }),
             "DISCOUNT" => $discount,
+            "is_have_course" => $is_have_course,
         ]);
     }
 }
