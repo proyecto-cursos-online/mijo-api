@@ -11,8 +11,7 @@ class LandingCourseResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
@@ -60,7 +59,7 @@ class LandingCourseResource extends JsonResource
             "discount_date" => $discount_g ? Carbon::parse($discount_g->end_date)->format("d/m") : NULL,
             "description" => $this->resource->description,
             "requirements" => json_decode($this->resource->requirements),
-            "who_is_it_for" => json_decode($this->resource->who_is_it_for),
+            "what_is_it_for" => json_decode($this->resource->what_is_it_for),
             "instructor" => $this->resource->instructor ? [
                 "id" => $this->resource->instructor->id,
                 "full_name" => $this->resource->instructor->name. ' '. $this->resource->instructor->surname,
@@ -88,16 +87,17 @@ class LandingCourseResource extends JsonResource
                 ];
             }),
             "updated_at" => $this->resource->updated_at->format("m/Y"),
-            "reviews" => $this->resource->reviews->map(function($review){
+            "reviews" => $this->resource->reviews ? $this->resource->reviews->map(function($review) {
                 return [
                     "message" => $review->message,
                     "rating" => $review->rating,
                     "user" => [
-                        "full_name" =>  $review->user->name.' '.$review->user->surname,
-                        "avatar" => env("APP_URL")."storage/".$review->user->avatar,
+                        "full_name" => $review->user ? $review->user->name.' '.$review->user->surname : 'Anonymous',
+                        "avatar" => $review->user && $review->user->avatar ? env("APP_URL")."storage/".$review->user->avatar : env("APP_URL")."storage/default_avatar.png",
                     ]
                 ];
-            })
-        ];  
+            }) : collect([]),
+            
+        ];
     }
 }
