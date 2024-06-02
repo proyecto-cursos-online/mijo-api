@@ -20,8 +20,8 @@ class UserController extends Controller
     {
         $search = $request->search;
         $state  = $request->state;
-
-        $users = User::filterAdvance($search, $state)->where("type_user", 2)->orderby("id", "desc")->get();
+        $type_user  = $request->type_user;
+        $users = User::filterAdvance($search, $state, $type_user)->orderby("id", "desc")->get();
 
         return response()->json([
             "users" => UserGCollection::make($users)
