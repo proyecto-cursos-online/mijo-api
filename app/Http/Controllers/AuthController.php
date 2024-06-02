@@ -33,6 +33,10 @@ class AuthController extends Controller
             'surname' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
+            'password' => 'required|min:8',
+            'role_id' => 'required',
+            'state' => 'required',
+            'type_user' => 'required',
         ]);
  
         if($validator->fails()){
@@ -44,6 +48,9 @@ class AuthController extends Controller
         $user->surname = request()->surname;
         $user->email = request()->email;
         $user->password = bcrypt(request()->password);
+        $user->role_id = request()->role_id;
+        $user->state = request()->state;
+        $user->type_user = request()->type_user;
         $user->save();
  
         return response()->json($user, 201);
