@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Course\Course;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Course\Course;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CoursesStudent extends Model
 {
@@ -13,7 +14,8 @@ class CoursesStudent extends Model
     protected $fillable = [
         "course_id",
         "user_id",
-        "clases_checkeds"
+        "clases_checkeds",
+        "state", // 1 es iniciado y 2 va ser terminado 
     ];
 
     public function setCreatedAtAttribute($value)

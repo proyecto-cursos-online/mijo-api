@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Ecommerce\Course;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CourseHomeResource extends JsonResource
@@ -10,18 +9,31 @@ class CourseHomeResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
+        // Es la campaña de descuento con la que esta relacionada
         $discount_g = null;
-        if ($this->resource->discount_c && $this->resource->discount_c_t) {
+        // if(){ // CURSO TIENE DESCUENTO A NIVEL (DE CURSO Y A NIVEL CATEGORIA)
+            // $discount_g = AL DESCUENTO DE TIPO CATEGORIA
+        // }else{
+        //     if(){ // CURSO TIENE DESCUENTO A NIVEL DE CURSO Y NO  ANIVEL DE CATEGORIA
+            // $discount_g = AL DESCUENTO DE TIPO CURSO
+        //     }else{
+                //  if(){ // CURSO NO TIENE DESCUENTO A NIVEL DE CURSO  , PERO SI TIENE DESCUENTO A NIVEL DE CATEGORIA
+                    // $discount_g = AL DESCUENTO DE TIPO CATEGORIA
+                //  }
+        //     }
+        // }
+        if($this->resource->discount_c && $this->resource->discount_c_t){
             $discount_g = $this->resource->discount_c_t;
-        } else {
-            if ($this->resource->discount_c && !$this->resource->discount_c_t) {
+        }else{
+            if($this->resource->discount_c && !$this->resource->discount_c_t){
                 $discount_g = $this->resource->discount_c;
-            } else {
-                if (!$this->resource->discount_c && $this->resource->discount_c_t) {
+            }else{
+                if(!$this->resource->discount_c && $this->resource->discount_c_t){
                     $discount_g = $this->resource->discount_c_t;
                 }
             }

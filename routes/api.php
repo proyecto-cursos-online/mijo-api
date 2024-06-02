@@ -69,11 +69,14 @@ Route::group([
 });
 Route::group(["prefix" => "ecommerce"],function($router){
     Route::get("home",[HomeController::class,"home"]);
+    Route::get("config_all",[HomeController::class,"config_all"]);
+    Route::post("list_courses",[HomeController::class,"listCourses"]);
     Route::get("course-detail/{slug}",[HomeController::class,"course_detail"]);
     
     Route::group([
         'middleware' => 'api',
     ], function ($router) {
+        Route::get("course_leason/{slug}",[HomeController::class,"course_leason"]);
         Route::post('/apply_coupon',[CartController::class, "apply_coupon"]);
         Route::resource('/cart',CartController::class);
         Route::post('/checkout',[CheckoutController::class,"store"]);
