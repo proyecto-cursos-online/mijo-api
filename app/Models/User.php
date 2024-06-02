@@ -106,13 +106,15 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    function scopeFilterAdvance($query,$search,$state)
+    function scopeFilterAdvance($query,$search,$state, $type_user)
     {
         if($search){
             $query->where("email","like","%".$search."%");
         }
         if($state){
             $query->where("state",$state);
+        }if ($type_user) {
+            $query->where("type_user",$type_user);
         }
         
         return $query;
