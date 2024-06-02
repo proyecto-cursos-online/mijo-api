@@ -31,7 +31,7 @@ class Course extends Model
         "time",
         "description",
         "requirements",
-        "who_is_it_for",
+        "what_is_it_for",
         "state",
     ];
 
