@@ -18,13 +18,18 @@ class CartController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $user = auth('api')->user();
+{
+    $user = auth('api')->user();
 
-        $carts = Cart::where("user_id",$user->id)->get();
-
+    if ($user) {
+        $carts = Cart::where("user_id", $user->id)->get();
         return response()->json(["carts" => CartCollection::make($carts)]);
+    } else {
+        // Manejar el caso cuando $user es nulo
+        // Por ejemplo, puedes devolver una respuesta JSON indicando que el usuario no está autenticado
+        return response()->json(["message" => "Usuario no autenticado"], 401);
     }
+}
 
     /**
      * Show the form for creating a new resource.
