@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Course\Categories\CategoryCollection;
 use App\Http\Resources\Course\Categories\CategoryResource;
 use App\Models\Course\Category;
+use App\Models\Course\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -88,7 +89,16 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
-        $category->delete();
-        return response()->json(["message" => 200]);
+        $subcategories = $category->children;
+        $courses = Course::where('sub_categorie_id', $category->id)->exists();    
+        if ($subcategories->isNotEmpty()) {
+            return response()->json(['error' => 'No se puede eliminar la categoría porque tiene subcategorías'], 422);                 
+        }if ($courses) {
+            return response()->json(['error' => 'No se puede eliminar la subcategoría porque tiene cursos asociados'], 422);
+        }else{
+            $category->delete();
+            return response()->json(["message" => 200]);
+        }
+        
     }
 }
