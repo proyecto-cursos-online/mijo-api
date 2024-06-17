@@ -89,7 +89,7 @@ class CourseGController extends Controller
         $vimeo_id = explode("/", $response)[2];
         $course->update(["vimeo_id" => $vimeo_id, "time" => date("H:i:s", $time)]);
         return response()->json([
-            "link_video" => "https://player.vimeo.com/video/".$vimeo_id,
+            "link_video" => "https://player.vimeo.com/video/" . $vimeo_id,
         ]);
     }
     /**
@@ -142,6 +142,12 @@ class CourseGController extends Controller
      */
     public function destroy(string $id)
     {
+        $course = Course::findOrFail($id);
+
+        // Verificar si el curso tiene secciones asociadas
+        if ($course->sections()->count() > 0) {
+            return response()->json(['error' => 'No se puede eliminar el curso porque tiene secciones asociadas'], 422);
+        }
         $course = Course::findOrFail($id);
         $course->delete();
         return response()->json(["message" => 200]);
