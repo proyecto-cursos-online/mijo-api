@@ -137,7 +137,7 @@ class Course extends Model
         }
         $hours = floor($total / 3600);
         $minutes = floor(($total / 60) % 60);
-        $seconds = $total % 60;
+        // $seconds = $total % 60;
 
         return $hours . " hrs " . $minutes . " mins";
     }

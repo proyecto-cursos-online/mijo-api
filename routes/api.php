@@ -70,8 +70,9 @@ Route::group([
 Route::group(["prefix" => "ecommerce"],function($router){
     Route::get("home",[HomeController::class,"home"]);
     Route::get("config_all",[HomeController::class,"config_all"]);
-    Route::post("list_courses",[HomeController::class,"listCourses"]);
     Route::get("course-detail/{slug}",[HomeController::class,"course_detail"]);
+    Route::post("list_courses",[HomeController::class,"listCourses"]);
+    
     
     Route::group([
         'middleware' => 'api',
